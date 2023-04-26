@@ -1,6 +1,5 @@
 import openrouteservice
 import folium
-import json
 
 
 def get_auth_client():
@@ -10,12 +9,14 @@ def get_auth_client():
     return client
 
 
-def get_isochrone_data(client, lat, long, walking_time):
-    # Set the location coordinate
+def get_isochrone_data(client, location):
+    # Set the locations coordinate for request
+    lat = location["lat"]
+    long = location["long"]
     locations = [[lat, long]]
 
     # Set the walking time in seconds
-    walking_time = [walking_time * 60]
+    walking_time = [location["walking_time"] * 60]
     mobility_modal = "foot-walking"
 
     isochrone = openrouteservice.isochrones.isochrones(
@@ -27,7 +28,7 @@ def get_isochrone_data(client, lat, long, walking_time):
         intervals=None,
         segments=None,
         interval=None,
-        units=None,
+        units="km",
         location_type=None,
         smoothing=None,
         attributes=["area", "total_pop"],
@@ -58,3 +59,34 @@ def get_isochrone_data(client, lat, long, walking_time):
     map_isochrone.save("templates/map.html")
 
     return isochrone
+
+
+def get_amenity_pois(client, location):
+    isochrone = location["iso"]
+
+    params_poi = {"request": "pois", "sortby": "distance"}
+
+    # POI categories according to
+    # https://giscience.github.io/openrouteservice/documentation/Places.html
+    categories_poi = {"kindergarten": [
+        153], "supermarket": [518], "hairdresser": [395]}
+
+    amenity_pois = dict()  # Store in pois dict for easier retrieval
+    amen_pois = dict()
+    params_poi["geojson"] = isochrone["features"][0]["geometry"]
+
+    for typ, category in categories_poi.items():
+        params_poi["filter_category_ids"] = category
+        amenity_pois[typ] = dict()
+        # create key for my second amenity thing that will have less data
+        amen_pois[typ] = dict()
+        amenity_pois[typ]["geojson"] = client.places(**params_poi)[
+            "features"
+        ]  # Actual POI request
+        amen_pois[typ] = len(
+            amenity_pois[typ]['geojson'])
+        print(f"\t{typ}: {len(amenity_pois[typ]['geojson'])}")
+
+    # currently using amen_pois to return only the number
+    # of pois, not extra data
+    return amen_pois

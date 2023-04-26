@@ -1,4 +1,4 @@
-{
+iso = {
     "type": "FeatureCollection",
     "bbox": [19.054666, 47.477628, 19.08797, 47.5015],
     "features": [

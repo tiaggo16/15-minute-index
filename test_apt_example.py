@@ -36,7 +36,8 @@ from openrouteservice import client
 # on a map:
 
 # +
-api_key = "your_key"  # Provide your personal API key
+# Provide your personal API key
+api_key = "5b3ce3597851110001cf6248ed7c285472d0424fa3355fcc32430803"
 ors = client.Client(key=api_key)
 # Set up folium map
 map1 = folium.Map(
@@ -94,7 +95,8 @@ params_poi = {"request": "pois", "sortby": "distance"}
 
 # POI categories according to
 # https://giscience.github.io/openrouteservice/documentation/Places.html
-categories_poi = {"kindergarten": [153], "supermarket": [518], "hairdresser": [395]}
+categories_poi = {"kindergarten": [153],
+                  "supermarket": [518], "hairdresser": [395]}
 
 for name, apt in apartments.items():
     apt["categories"] = dict()  # Store in pois dict for easier retrieval
@@ -109,7 +111,7 @@ for name, apt in apartments.items():
         ]  # Actual POI request
         print(f"\t{typ}: {len(apt['categories'][typ]['geojson'])}")
 # -
-
+breakpoint()
 # We already see that the second apartment is missing a supermarket in a 15-minute walking range and continue without it.
 
 # Remove second apartment
@@ -162,7 +164,8 @@ for apt in apartments.values():
             poi_duration = json_route["features"][0]["properties"]["summary"][
                 "duration"
             ]
-            pois["durations"].append(poi_duration)  # Record durations of routes
+            # Record durations of routes
+            pois["durations"].append(poi_duration)
 
 map1
 # -

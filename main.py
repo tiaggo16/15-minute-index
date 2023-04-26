@@ -1,7 +1,7 @@
-from calculations import calculate_di, calculate_ai, calculate_fmi
+from calculations import calculate_di, calculate_ai, calculate_pi, calculate_fmi
 from inputs import dmin, dmax, at1, at2, at3, divi
 from ahp import get_weights
-from ors import get_auth_client, get_isochrone_data
+from ors import get_auth_client, get_isochrone_data, get_amenity_pois
 
 
 def handle_inputs(inputs):
@@ -19,11 +19,15 @@ def handle_inputs(inputs):
 
 def fmi_method(inputs):
     ors_client = get_auth_client()
-    # set base params
-    walking_time = inputs["walking_time"]
+
+    # set initial location data
+    location = dict()
+    location["walking_time"] = inputs["walking_time"]
+    location["lat"] = inputs["lat"]
+    location["long"] = inputs["long"]
 
     # calculate weights according to user input
-    w = get_weights(
+    weights = get_weights(
         inputs["avb"],
         inputs["avc"],
         inputs["bvc"],
@@ -31,37 +35,32 @@ def fmi_method(inputs):
         inputs["pavc"],
         inputs["pbvc"],
     )
-    dw = w["dw"]
-    divw = w["divw"]
-    pw = w["pw"]
-    aw1 = w["aw1"]
-    aw2 = w["aw2"]
-    aw3 = w["aw3"]
+    dw = weights["dw"]
+    divw = weights["divw"]
+    pw = weights["pw"]
+    aw1 = weights["aw1"]
+    aw2 = weights["aw2"]
+    aw3 = weights["aw3"]
 
-    # get isochrone, area and population
-    isochrone_data = get_isochrone_data(ors_client, 19.071304, 47.489314, walking_time)
+    # get isochrone, its area and population
+    location["iso"] = get_isochrone_data(
+        ors_client, location)
 
-    isochrone = isochrone_data["features"][0]["geometry"]["coordinates"][0]
-    area = isochrone_data["features"][0]["properties"]["area"]
-    population = isochrone_data["features"][0]["properties"]["total_pop"]
+    isochrone = location["iso"]["features"][0]["geometry"]["coordinates"][0]
+    iso_area = location["iso"]["features"][0]["properties"]["area"]
+    iso_pop = location["iso"]["features"][0]["properties"]["total_pop"]
 
     # calculate the Density Index (DI)
-    di = calculate_di(population, area, dmin, dmax)
+    di = calculate_di(iso_pop, iso_area, dmin, dmax)
 
-    # calculate the Amenity Index 1 (AI1)
-    ai1 = calculate_ai(at1)
-
-    # calculate the Amenity Index 2 (AI2)
-    ai2 = calculate_ai(at2)
-
-    # calculate the Amenity Index 3 (AI3)
-    ai3 = calculate_ai(at3)
+    # get amenity POIs
+    location["amenity_pois"] = get_amenity_pois(ors_client, location)
 
     # calculate the weighted proximity index (PI)
-    pi = ai1 * aw1 + ai2 * aw2 + ai3 * aw3
+    pi = calculate_pi(location, weights)
 
     # calculate the 15 Minute City Index (FCI)
     fmi = calculate_fmi(di, divi, pi, dw, divw, pw)
 
     # return indexes
-    return {"indexes": {"fmi": fmi, "di": di, "divi": divi, "pi": pi}, "weights": w}
+    return {"indexes": {"fmi": fmi, "di": di, "divi": divi, "pi": pi}, "weights": weights}

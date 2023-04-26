@@ -11,11 +11,11 @@ def home():
 
 @app.route("/result", methods=["GET", "POST"])
 def result():
-    raw_inputs = {}
+    inputs = {}
     for key, value in request.form.items():
-        raw_inputs[key] = value
-    inputs = handle_inputs(raw_inputs)
-    result = fmi_method(inputs)
+        inputs[key] = value
+    handled_inputs = handle_inputs(inputs)
+    result = fmi_method(handled_inputs)
     return render_template(
         "result.html",
         fmi=result["indexes"]["fmi"],

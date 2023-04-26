@@ -9,81 +9,88 @@
 <body>
     <h1>15 Minute Index Calculator</h1>
     <form method="POST" action="/result">
+        <h2>Latitude and Longitude of the location</h2>
+        <label for="let">Latitude:</label>
+        <input type="text" id="lat" name="lat" placeholder="Enter latitude value" required>
+
+        <label for="long">Longitude:</label>
+        <input type="text" id="long" name="long" placeholder="Enter longitude value" required>
+        <br><br>
         <h2>Maximum walk time</h2>
         {% for i in range(1, 5) %}
         <label>{{ 5*i }}</label>
-        <input type="radio" name="walking_time" value="{{ 5*i }}">
+        <input type="radio" name="walking_time" value="{{ 5*i }}" required>
         {% endfor %}
         <br><br>
         <h2>Density vs Diversity</h2>
         <label>Left option better</label>
-        <input type="radio" name="avb-pref" value="left">
+        <input type="radio" name="avb-pref" value="left" required>
         <label>Right option better</label>
-        <input type="radio" name="avb-pref" value="right">
+        <input type="radio" name="avb-pref" value="right" required>
         ||
         {% for i in range(1, 10) %}
         <label>{{ i }}</label>
-        <input type="radio" name="avb" value="{{ i }}">
+        <input type="radio" name="avb" value="{{ i }}" required>
         {% endfor %}
         <br><br>
 
         <h2>Density vs Proximity</h2>
         <label>Left option better</label>
-        <input type="radio" name="avc-pref" value="left">
+        <input type="radio" name="avc-pref" value="left" required>
         <label>Right option better</label>
-        <input type="radio" name="avc-pref" value="right">
+        <input type="radio" name="avc-pref" value="right" required>
         ||
         {% for i in range(1, 10) %}
         <label>{{ i }}</label>
-        <input type="radio" name="avc" value="{{ i }}">
+        <input type="radio" name="avc" value="{{ i }}" required>
         {% endfor %}
         <br><br>
 
         <h2>Diversity vs Proximity</h2>
         <label>Left option better</label>
-        <input type="radio" name="bvc-pref" value="left">
+        <input type="radio" name="bvc-pref" value="left" required>
         <label>Right option better</label>
-        <input type="radio" name="bvc-pref" value="right">
+        <input type="radio" name="bvc-pref" value="right" required>
         ||
         {% for i in range(1, 10) %}
         <label>{{ i }}</label>
-        <input type="radio" name="bvc" value="{{ i }}">
+        <input type="radio" name="bvc" value="{{ i }}" required>
         {% endfor %}
         <br><br>
 
         <h2>Grocery Shop vs School</h2>
         <label>Left option better</label>
-        <input type="radio" name="pavb-pref" value="left">
+        <input type="radio" name="pavb-pref" value="left" required>
         <label>Right option better</label>
-        <input type="radio" name="pavb-pref" value="right">
+        <input type="radio" name="pavb-pref" value="right" required>
         ||
         {% for i in range(1, 10) %}
         <label>{{ i }}</label>
-        <input type="radio" name="pavb" value="{{ i }}">
+        <input type="radio" name="pavb" value="{{ i }}" required>
         {% endfor %}
         <br><br>
 
         <h2>Grocery Shop vs Mall</h2>
         <label>Left option better</label>
-        <input type="radio" name="pavc-pref" value="left">
+        <input type="radio" name="pavc-pref" value="left" required>
         <label>Right option better</label>
-        <input type="radio" name="pavc-pref" value="right">
+        <input type="radio" name="pavc-pref" value="right" required>
         ||
         {% for i in range(1, 10) %}
         <label>{{ i }}</label>
-        <input type="radio" name="pavc" value="{{ i }}">
+        <input type="radio" name="pavc" value="{{ i }}" required>
         {% endfor %}
         <br><br>
 
         <h2>School vs Mall</h2>
         <label>Left option better</label>
-        <input type="radio" name="pbvc-pref" value="left">
+        <input type="radio" name="pbvc-pref" value="left" required>
         <label>Right option better</label>
-        <input type="radio" name="pbvc-pref" value="right">
+        <input type="radio" name="pbvc-pref" value="right" required>
         ||
         {% for i in range(1, 10) %}
         <label>{{ i }}</label>
-        <input type="radio" name="pbvc" value="{{ i }}">
+        <input type="radio" name="pbvc" value="{{ i }}" required>
         {% endfor %}
         <br><br>
 

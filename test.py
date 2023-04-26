@@ -2,7 +2,9 @@ from main import handle_inputs, fmi_method
 
 handled_inputs = handle_inputs(
     {
-        "walking_time": "10",
+        "lat": "19.071304",
+        "long": "47.489314",
+        "walking_time": "15",
         "avb-pref": "left",
         "avb": "2",
         "avc-pref": "right",

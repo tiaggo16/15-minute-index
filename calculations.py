@@ -25,11 +25,12 @@ def calculate_ai(location, key, qmax=100, qmin=0):
 
 def calculate_pi(location, weights, qmax=100, qmin=0):
 
-    ai1 = calculate_ai(location, "kindergarten")
-    ai2 = calculate_ai(location, "supermarket")
-    ai3 = calculate_ai(location, "hairdresser")
+    ai1 = calculate_ai(location, location["amenities"][0])
+    ai2 = calculate_ai(location, location["amenities"][1])
+    ai3 = calculate_ai(location, location["amenities"][2])
     pi = ai1 * weights["aw1"] + ai2 * weights["aw2"] + ai3 * weights["aw3"]
-    breakpoint()
+
+    return round(pi, 4)
 
 
 def calculate_fmi(di, divi, pi, dw, divw, pw):

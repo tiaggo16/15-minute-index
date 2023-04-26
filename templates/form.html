@@ -4,11 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <title>15 Minute Index Calculator</title>
+
+    <script>
+        function checkSelections() {
+            var amenity1 = document.getElementById("amenity1").value;
+            var amenity2 = document.getElementById("amenity2").value;
+            var amenity3 = document.getElementById("amenity3").value;
+
+            if (amenity1 === amenity2 || amenity1 === amenity3 || amenity2 === amenity3) {
+                alert("Please select 3 different amenities.");
+                return false;
+            }
+        }
+    </script>
+
 </head>
 
 <body>
     <h1>15 Minute Index Calculator</h1>
-    <form method="POST" action="/result">
+    <form method="POST" action="/result" onsubmit="return checkSelections();">
+        <h2>Define Location, Walk Time and Amenities</h2>
+        <br>
         <h2>Latitude and Longitude of the location</h2>
         <label for="let">Latitude:</label>
         <input type="text" id="lat" name="lat" placeholder="Enter latitude value" required>
@@ -21,7 +37,58 @@
         <label>{{ 5*i }}</label>
         <input type="radio" name="walking_time" value="{{ 5*i }}" required>
         {% endfor %}
+
+        <h2>Select Amenities</h2>
+        <label for="amenity1">Amenity 1:</label>
+        <select id="amenity1" name="amenity1">
+            <option value="">Select an amenity</option>
+            <option value="kindergarten">Kindergarten</option>
+            <option value="supermarket">Supermarket</option>
+            <option value="hairdresser">Hairdresser</option>
+            <option value="bank">Bank</option>
+            <option value="school">School</option>
+            <option value="university">University</option>
+            <option value="hospital">Hospital</option>
+            <option value="park">Park</option>
+            <option value="restaurant">Restaurant</option>
+            <option value="bar">Bar</option>
+            <option value="cafe">Cafe</option>
+        </select>
+
+        <label for="amenity2">Amenity 2:</label>
+        <select id="amenity2" name="amenity2">
+            <option value="">Select an amenity</option>
+            <option value="kindergarten">Kindergarten</option>
+            <option value="supermarket">Supermarket</option>
+            <option value="hairdresser">Hairdresser</option>
+            <option value="bank">Bank</option>
+            <option value="school">School</option>
+            <option value="university">University</option>
+            <option value="hospital">Hospital</option>
+            <option value="park">Park</option>
+            <option value="restaurant">Restaurant</option>
+            <option value="bar">Bar</option>
+            <option value="cafe">Cafe</option>
+        </select>
+
+        <label for="amenity3">Amenity 3:</label>
+        <select id="amenity3" name="amenity3">
+            <option value="">Select an amenity</option>
+            <option value="kindergarten">Kindergarten</option>
+            <option value="supermarket">Supermarket</option>
+            <option value="hairdresser">Hairdresser</option>
+            <option value="bank">Bank</option>
+            <option value="school">School</option>
+            <option value="university">University</option>
+            <option value="hospital">Hospital</option>
+            <option value="park">Park</option>
+            <option value="restaurant">Restaurant</option>
+            <option value="bar">Bar</option>
+            <option value="cafe">Cafe</option>
+        </select>
+
         <br><br>
+        <h2>Define Your Prefered Options:</h2>
         <h2>Density vs Diversity</h2>
         <label>Left option better</label>
         <input type="radio" name="avb-pref" value="left" required>
@@ -58,7 +125,7 @@
         {% endfor %}
         <br><br>
 
-        <h2>Grocery Shop vs School</h2>
+        <h2>Amenity 1 vs Amenity 2</h2>
         <label>Left option better</label>
         <input type="radio" name="pavb-pref" value="left" required>
         <label>Right option better</label>
@@ -70,7 +137,7 @@
         {% endfor %}
         <br><br>
 
-        <h2>Grocery Shop vs Mall</h2>
+        <h2>Amenity 1 vs Amenity 3</h2>
         <label>Left option better</label>
         <input type="radio" name="pavc-pref" value="left" required>
         <label>Right option better</label>
@@ -82,7 +149,7 @@
         {% endfor %}
         <br><br>
 
-        <h2>School vs Mall</h2>
+        <h2>Amenity 2 vs Amenity 3</h2>
         <label>Left option better</label>
         <input type="radio" name="pbvc-pref" value="left" required>
         <label>Right option better</label>

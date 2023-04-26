@@ -3,11 +3,13 @@ from inputs import dmin, dmax, at1, at2, at3, divi
 from ahp import get_weights
 from ors import get_auth_client, get_isochrone_data, get_amenity_pois
 
+import re
+
 
 def handle_inputs(inputs):
     # inverts value if right option is prefered
     for key in inputs:
-        if "-pref" not in key:
+        if not re.search('[a-zA-Z]', inputs[key]):
             inputs[key] = float(inputs[key])
     for key in inputs:
         preference_key = key + "-pref"
@@ -25,7 +27,8 @@ def fmi_method(inputs):
     location["walking_time"] = inputs["walking_time"]
     location["lat"] = inputs["lat"]
     location["long"] = inputs["long"]
-
+    location["amenities"] = (
+        inputs["amenity1"], inputs["amenity2"], inputs["amenity3"])
     # calculate weights according to user input
     weights = get_weights(
         inputs["avb"],

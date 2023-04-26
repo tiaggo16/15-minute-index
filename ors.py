@@ -61,18 +61,35 @@ def get_isochrone_data(client, location):
     return isochrone
 
 
-def get_amenity_pois(client, location):
-    isochrone = location["iso"]
-
-    params_poi = {"request": "pois", "sortby": "distance"}
-
+def build_categories_poi(categories):
     # POI categories according to
     # https://giscience.github.io/openrouteservice/documentation/Places.html
-    categories_poi = {"kindergarten": [
-        153], "supermarket": [518], "hairdresser": [395]}
+    category_mapping = {
+        "kindergarten": [153],
+        "supermarket": [518],
+        "hairdresser": [395],
+        "bank": [192],
+        "school": [156],
+        "university": [157],
+        "hospital": [206],
+        "park": [280],
+        "restaurant": [570],
+        "bar": [561],
+        "cafe": [564],
+    }
+    categories_poi = {}
+    for cat in categories:
+        categories_poi[cat] = category_mapping[cat]
+    return categories_poi
+
+
+def get_amenity_pois(client, location):
+    isochrone = location["iso"]
+    params_poi = {"request": "pois", "sortby": "distance"}
+    categories_poi = build_categories_poi(location["amenities"])
 
     amenity_pois = dict()  # Store in pois dict for easier retrieval
-    amen_pois = dict()
+    amen_pois = dict()  # Store just number of pois for each category
     params_poi["geojson"] = isochrone["features"][0]["geometry"]
 
     for typ, category in categories_poi.items():
@@ -88,5 +105,5 @@ def get_amenity_pois(client, location):
         print(f"\t{typ}: {len(amenity_pois[typ]['geojson'])}")
 
     # currently using amen_pois to return only the number
-    # of pois, not extra data
+    # of pois, not extra data about each amenity poi
     return amen_pois

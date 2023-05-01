@@ -7,16 +7,17 @@
 
 <body>
     <h1>15 Minute Index Results</h1>
-    <p><strong>15 minute index:</strong> {{ fmi }}</p>
-    <p><strong>Density Index:</strong> {{ di }}</p>
-    <p><strong>Diversity Index:</strong> {{ divi }}</p>
-    <p><strong>Proximity Index:</strong> {{ pi }}</p>
-    <br>
-
     <div>
-        <iframe class="v-full h-full absolute top-0 left-0" src="map"></iframe>
-    </div>
+        <p><strong>15 minute index:</strong> {{ fmi }}</p>
+        <p><strong>Density Index:</strong> {{ di }}</p>
+        <p><strong>Diversity Index:</strong> {{ divi }}</p>
+        <p><strong>Proximity Index:</strong> {{ pi }}</p>
+        <br>
 
+        <div>
+            <iframe class="v-full h-full absolute top-0 left-0" src="map"></iframe>
+        </div>
+    </div>
 </body>
 
 </html>

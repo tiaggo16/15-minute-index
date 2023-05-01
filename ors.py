@@ -19,6 +19,7 @@ def get_isochrone_data(client, location):
     walking_time = [location["walking_time"] * 60]
     mobility_modal = "foot-walking"
 
+    # Make API request for isochrone data
     isochrone = openrouteservice.isochrones.isochrones(
         client,
         locations,
@@ -33,7 +34,12 @@ def get_isochrone_data(client, location):
         smoothing=None,
         attributes=["area", "total_pop"],
     )
+    create_map_with_iso_file(isochrone, long, lat)
+    print(isochrone["features"][0])
+    return isochrone
 
+
+def create_map_with_iso_file(isochrone, long, lat):
     # map
     map_isochrone = folium.Map(
         location=[long, lat], tiles="cartodbpositron", zoom_start=12
@@ -58,35 +64,21 @@ def get_isochrone_data(client, location):
     # display map
     map_isochrone.save("templates/map.html")
 
-    return isochrone
 
-
-def build_categories_poi(categories):
+def build_categories_poi(categories, amenity_mapping):
     # POI categories according to
     # https://giscience.github.io/openrouteservice/documentation/Places.html
-    category_mapping = {
-        "kindergarten": [153],
-        "supermarket": [518],
-        "hairdresser": [395],
-        "bank": [192],
-        "school": [156],
-        "university": [157],
-        "hospital": [206],
-        "park": [280],
-        "restaurant": [570],
-        "bar": [561],
-        "cafe": [564],
-    }
     categories_poi = {}
     for cat in categories:
-        categories_poi[cat] = category_mapping[cat]
+        categories_poi[cat] = amenity_mapping[cat]["osm_code"]
     return categories_poi
 
 
-def get_amenity_pois(client, location):
+def get_amenity_pois(client, location, amenity_mapping):
     isochrone = location["iso"]
     params_poi = {"request": "pois", "sortby": "distance"}
-    categories_poi = build_categories_poi(location["amenities"])
+    categories_poi = build_categories_poi(
+        location["amenities"], amenity_mapping)
 
     amenity_pois = dict()  # Store in pois dict for easier retrieval
     amen_pois = dict()  # Store just number of pois for each category

@@ -111,7 +111,6 @@ for name, apt in apartments.items():
         ]  # Actual POI request
         print(f"\t{typ}: {len(apt['categories'][typ]['geojson'])}")
 # -
-breakpoint()
 # We already see that the second apartment is missing a supermarket in a 15-minute walking range and continue without it.
 
 # Remove second apartment

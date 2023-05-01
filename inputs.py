@@ -1,6 +1,6 @@
-dmin = 7000  # minimum density
-dmax = 35000  # maximum density
+dmin = 300  # minimum density   3861
+dmax = 13000  # maximum density  38610
 at1 = 10  # time to amenity 1
 at2 = 15  # time to amenity 2
 at3 = 20  # time to amenity 3
-divi = 0.8  # diversity index
+land_use_ratios = (0.2, 0.7, 0.1)  # for diversity index

@@ -1,9 +1,9 @@
-from numpy import clip, log, log
+from numpy import clip, log
 
 
 def calculate_di(iso_pop, iso_area):
     dmin = 300
-    dmax = 13000
+    dmax = 9200
     iso_density = iso_pop / iso_area
     di = (iso_density - dmin) / (dmax - dmin)
     return clip(round(di, 4), 0, 1)
@@ -34,7 +34,7 @@ def calculate_entropy(ratios):
 
 
 def calculate_divi(land_use_ratios):
-    # takes tuple with ratios of land uses, must sum 1
+    # takes tuple with ratios of land uses, must add up to 1
     ent = calculate_entropy(land_use_ratios)
     hhi = calculate_hhi(land_use_ratios)
     divi = (ent + hhi)/2

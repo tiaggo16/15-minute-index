@@ -21,6 +21,10 @@ def get_weights(avb, avc, bvc, pavb, pavc, pbvc):
     proximity = ahpy.Compare(
         "Proximity", proximity_comparisons, precision=3, random_index="saaty"
     )
+    if criteria.consistency_ratio > 0.1 or proximity.consistency_ratio > 0.1:
+        print(
+            "The priorities given for the criteria are too inconsistent. Please verify values.")
+        return
 
     weights = {
         "dw": criteria.target_weights["Density"],

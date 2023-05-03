@@ -3,15 +3,15 @@ import ahpy
 
 def get_weights(avb, avc, bvc, pavb, pavc, pbvc):
     criteria_comparisons = {
-        ("Density", "Diversity"): avb,
-        ("Density", "Proximity"): avc,
-        ("Diversity", "Proximity"): bvc,
+        ("density", "diversity"): avb,
+        ("density", "proximity"): avc,
+        ("diversity", "proximity"): bvc,
     }
 
     proximity_comparisons = {
-        ("Grocery Shop", "School"): pavb,
-        ("Grocery Shop", "Mall"): pavc,
-        ("School", "Mall"): pbvc,
+        ("amenity_1", "amenity_2"): pavb,
+        ("amenity_1", "amenity_3"): pavc,
+        ("amenity_2", "amenity_3"): pbvc,
     }
 
     criteria = ahpy.Compare(
@@ -27,12 +27,12 @@ def get_weights(avb, avc, bvc, pavb, pavc, pbvc):
         return
 
     weights = {
-        "dw": criteria.target_weights["Density"],
-        "divw": criteria.target_weights["Diversity"],
-        "pw": criteria.target_weights["Proximity"],
-        "aw1": proximity.target_weights["Grocery Shop"],
-        "aw2": proximity.target_weights["School"],
-        "aw3": proximity.target_weights["Mall"],
+        "dw": criteria.target_weights["density"],
+        "divw": criteria.target_weights["diversity"],
+        "pw": criteria.target_weights["proximity"],
+        "aw1": proximity.target_weights["amenity_1"],
+        "aw2": proximity.target_weights["amenity_2"],
+        "aw3": proximity.target_weights["amenity_3"],
         "g_cr": criteria.consistency_ratio,
         "p_cr": proximity.consistency_ratio,
     }

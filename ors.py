@@ -11,9 +11,9 @@ def get_auth_client():
 
 def get_isochrone_data(client, location):
     # Set the locations coordinate for request
-    lat = location["lat"]
     long = location["long"]
-    locations = [[lat, long]]
+    lat = location["lat"]
+    locations = [[long, lat]]
 
     # Set the walking time in seconds
     walking_time = [location["walking_time"] * 60]
@@ -34,15 +34,14 @@ def get_isochrone_data(client, location):
         smoothing=None,
         attributes=["area", "total_pop"],
     )
-    create_map_with_iso_file(isochrone, long, lat)
-    print(isochrone["features"][0])
+    create_map_with_iso_file(isochrone, lat, long)
     return isochrone
 
 
-def create_map_with_iso_file(isochrone, long, lat):
+def create_map_with_iso_file(isochrone, lat, long):
     # map
     map_isochrone = folium.Map(
-        location=[long, lat], tiles="cartodbpositron", zoom_start=12
+        location=[lat, long], tiles="cartodbpositron", zoom_start=12
     )
 
     # add geojson to map with population
@@ -54,7 +53,7 @@ def create_map_with_iso_file(isochrone, long, lat):
     # add marker to map
     minutes = isochrone["features"][0]["properties"]["value"] / 60
     popup_message = f"outline shows areas reachable within {minutes} minutes"
-    folium.Marker([long, lat], popup=popup_message, tooltip="click").add_to(
+    folium.Marker([lat, long], popup=popup_message, tooltip="click").add_to(
         map_isochrone
     )
 
@@ -94,7 +93,7 @@ def get_amenity_pois(client, location, amenity_mapping):
         ]  # Actual POI request
         amen_pois[typ] = len(
             amenity_pois[typ]['geojson'])
-        print(f"\t{typ}: {len(amenity_pois[typ]['geojson'])}")
+        # print(f"\t{typ}: {len(amenity_pois[typ]['geojson'])}")
 
     # currently using amen_pois to return only the number
     # of pois, not extra data about each amenity poi

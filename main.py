@@ -1,5 +1,4 @@
 from calculations import calculate_di, calculate_divi, calculate_pi, calculate_fmi
-from inputs import at1, at2, at3, land_use_ratios
 from ahp import get_weights
 from ors import get_auth_client, get_isochrone_data, get_amenity_pois
 
@@ -17,9 +16,9 @@ amenity_mapping = {
         "qmax": 25,
         "qmin": 0,
     },
-    "hairdresser": {
-        "osm_code": [395],
-        "qmax": 20,
+    "church": {
+        "osm_code": [135],
+        "qmax": 5,
         "qmin": 0,
     },
     "bank": {
@@ -64,6 +63,12 @@ amenity_mapping = {
     },
 }
 
+ratios_mapping = {
+    "center": (0.0858, 0.3273, 0.1984, 0.2572, 0.0927, 0.0386),
+    "suburb": (0.1285, 0.1074, 0.1506, 0.5786, 0.0344, 0.004),
+    "uni": (0.6960, 0.0643, 0.0124, 0.1927, 0.0332, 0.0013),
+}
+
 
 def handle_inputs(inputs):
     # inverts value if right option is prefered
@@ -79,13 +84,17 @@ def handle_inputs(inputs):
 
 
 def fmi_method(inputs):
-    ors_client = get_auth_client()
+    # if "user" not in inputs:
+    #    inputs["user"] = "not_set"
+    # if "place" not in inputs:
+    #    inputs["place"] = "center"
 
+    ors_client = get_auth_client()
     # set initial location data
     location = dict()
     location["walking_time"] = inputs["walking_time"]
-    location["lat"] = inputs["lat"]
     location["long"] = inputs["long"]
+    location["lat"] = inputs["lat"]
     location["amenities"] = (
         inputs["amenity1"], inputs["amenity2"], inputs["amenity3"])
     # calculate weights according to user input
@@ -104,7 +113,7 @@ def fmi_method(inputs):
     # get isochrone, its area and population
     location["iso"] = get_isochrone_data(
         ors_client, location)
-
+    # return location["iso"]["features"][0]
     iso_area = location["iso"]["features"][0]["properties"]["area"]
     iso_pop = location["iso"]["features"][0]["properties"]["total_pop"]
 
@@ -112,6 +121,8 @@ def fmi_method(inputs):
     di = calculate_di(iso_pop, iso_area)
 
     # calculate the Density Index (DI)
+    place = inputs["place"]
+    land_use_ratios = ratios_mapping[place]
     divi = calculate_divi(land_use_ratios)
 
     # get amenity POIs
@@ -125,4 +136,5 @@ def fmi_method(inputs):
     fmi = calculate_fmi(di, divi, pi, dw, divw, pw)
 
     # return indexes
-    return {"indexes": {"fmi": fmi, "di": di, "divi": divi, "pi": pi}, "weights": weights}
+    # return {"indexes": {"fmi": fmi, "di": di, "divi": divi, "pi": pi}, "weights": weights}
+    return {f"{inputs['user']}_{inputs['place']}": {"fmi": fmi, "di": di, "divi": divi, "pi": pi, "pop": iso_pop, "area": iso_area, "weights": weights}}

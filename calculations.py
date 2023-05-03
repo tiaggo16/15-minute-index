@@ -10,7 +10,7 @@ def calculate_di(iso_pop, iso_area):
 
 
 def calculate_hhi(ratios):
-    if round(sum(ratios), 3) != 1:
+    if round(sum(ratios), 2) != 1:
         print("Wrong land use ratios - sum not equal to 1")
         return
     hhi = 1 - sum(r*r for r in ratios)
@@ -18,7 +18,7 @@ def calculate_hhi(ratios):
 
 
 def calculate_entropy(ratios):
-    if round(sum(ratios), 3) != 1:
+    if round(sum(ratios), 2) != 1:
         print("Wrong land use ratios - sum not equal to 1")
         return
     log_ratios = map(log, ratios)
@@ -69,9 +69,5 @@ def calculate_pi(location, weights, amenity_mapping):
 
 
 def calculate_fmi(di, divi, pi, dw, divw, pw):
-    """
-    Calculate the 15 Minute City Index (FMI) given the Density Index (DI),
-    Diversity Index (DivI), and weighted Proximity Index (PI_weighted).
-    """
     fmi = di * dw + divi * divw + pi * pw
     return clip(round(fmi, 4), 0, 1)

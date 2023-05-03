@@ -25,11 +25,11 @@
     <form method="POST" action="/result" onsubmit="return checkSelections();">
         <h2>Define Location, Walk Time and Amenities</h2>
         <h2>Latitude and Longitude of the location</h2>
+        <label for="long">Longitude:</label>
+        <input type="text" id="long" name="long" placeholder="Enter longitude value" required>
         <label for="let">Latitude:</label>
         <input type="text" id="lat" name="lat" placeholder="Enter latitude value" required>
 
-        <label for="long">Longitude:</label>
-        <input type="text" id="long" name="long" placeholder="Enter longitude value" required>
         <br><br>
         <h2>Maximum walk time</h2>
         {% for i in range(1, 5) %}
@@ -43,7 +43,7 @@
             <option value="">Select an amenity</option>
             <option value="kindergarten">Kindergarten</option>
             <option value="supermarket">Supermarket</option>
-            <option value="hairdresser">Hairdresser</option>
+            <option value="church">Church</option>
             <option value="bank">Bank</option>
             <option value="school">School</option>
             <option value="university">University</option>
@@ -59,7 +59,7 @@
             <option value="">Select an amenity</option>
             <option value="kindergarten">Kindergarten</option>
             <option value="supermarket">Supermarket</option>
-            <option value="hairdresser">Hairdresser</option>
+            <option value="church">Church</option>
             <option value="bank">Bank</option>
             <option value="school">School</option>
             <option value="university">University</option>
@@ -75,7 +75,7 @@
             <option value="">Select an amenity</option>
             <option value="kindergarten">Kindergarten</option>
             <option value="supermarket">Supermarket</option>
-            <option value="hairdresser">Hairdresser</option>
+            <option value="church">Church</option>
             <option value="bank">Bank</option>
             <option value="school">School</option>
             <option value="university">University</option>

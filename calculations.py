@@ -41,30 +41,31 @@ def calculate_divi(land_use_ratios):
     return clip(round(divi, 4), 0, 1)
 
 
-def calculate_ai(location, amenity_key, amenity_mapping):
-    qmax = amenity_mapping[amenity_key]["qmax"]
-    qmin = amenity_mapping[amenity_key]["qmin"]
-    quant = location["amenity_pois"][amenity_key]
+def calculate_ai(location, i, amenity_mapping):
+    # Calculate proximity component
+    tmax = 30
+    tmin = 0
+    tt_amenity = location["amenity_data"][location["amenities"][i]]["min_tt_to_amenity"]
+    ai_prox = clip((tmax - tt_amenity) / (tmax - tmin), 0, 1)
 
-    ai = (quant - qmin) / (qmax - qmin)
+    # Calculate quantity component
+    qmax = amenity_mapping[location["amenities"][i]]["qmax"]
+    qmin = amenity_mapping[location["amenities"][i]]["qmin"]
+    quant = location["amenity_data"][location["amenities"][i]]["number"]
+
+    ai_quant = clip((quant - qmin) / (qmax - qmin), 0, 1)
+
+    ai = (ai_quant + ai_prox) / 2
+    print(ai, ai_prox, ai_quant)
     return clip(round(ai, 4), 0, 1)
-
-    # AMENITY INDEX FORMULA USING ROUTE TIME INSTEAD OF QUANTITY
-    """
-    Calculate an Amenity Index (AI) given the time to the amenity (At),
-    the maximum time to the amenity (Tmax), and the minimum time to the amenity (Tmin).
-    """
-    # (tmax = 30, tmin = 5)
-    # ai = (tmax - at) / (tmax - tmin)
-    # return round(ai, 4)
 
 
 def calculate_pi(location, weights, amenity_mapping):
-
-    ai1 = calculate_ai(location, location["amenities"][0], amenity_mapping)
-    ai2 = calculate_ai(location, location["amenities"][1], amenity_mapping)
-    ai3 = calculate_ai(location, location["amenities"][2], amenity_mapping)
+    ai1 = calculate_ai(location, 0, amenity_mapping)
+    ai2 = calculate_ai(location, 1, amenity_mapping)
+    ai3 = calculate_ai(location, 2, amenity_mapping)
     pi = ai1 * weights["aw1"] + ai2 * weights["aw2"] + ai3 * weights["aw3"]
+
     return clip(round(pi, 4), 0, 1)
 
 

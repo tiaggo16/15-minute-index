@@ -144,7 +144,6 @@ for apt in apartments.values():
         pois["durations"] = []
         for poi in pois["geojson"]:
             poi_coords = poi["geometry"]["coordinates"]
-
             # Perform actual request
             params_route["coordinates"] = [apt["location"], poi_coords]
             json_route = ors.directions(**params_route)

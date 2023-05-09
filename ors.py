@@ -73,28 +73,76 @@ def build_categories_poi(categories, amenity_mapping):
     return categories_poi
 
 
-def get_amenity_pois(client, location, amenity_mapping):
-    isochrone = location["iso"]
+def get_amenity_pois_by_category(client, loc, amenity_mapping):
     params_poi = {"request": "pois", "sortby": "distance"}
     categories_poi = build_categories_poi(
-        location["amenities"], amenity_mapping)
+        loc["amenities"], amenity_mapping)
 
-    amenity_pois = dict()  # Store in pois dict for easier retrieval
-    amen_pois = dict()  # Store just number of pois for each category
-    params_poi["geojson"] = isochrone["features"][0]["geometry"]
+    amenity_pois_by_category = dict()
+    params_poi["geojson"] = loc["iso"]["features"][0]["geometry"]
 
     for typ, category in categories_poi.items():
         params_poi["filter_category_ids"] = category
-        amenity_pois[typ] = dict()
-        # create key for my second amenity thing that will have less data
-        amen_pois[typ] = dict()
-        amenity_pois[typ]["geojson"] = client.places(**params_poi)[
+        amenity_pois_by_category[typ] = dict()
+
+        amenity_pois_by_category[typ]["geojson"] = client.places(**params_poi)[
             "features"
         ]  # Actual POI request
-        amen_pois[typ] = len(
-            amenity_pois[typ]['geojson'])
-        # print(f"\t{typ}: {len(amenity_pois[typ]['geojson'])}")
 
-    # currently using amen_pois to return only the number
-    # of pois, not extra data about each amenity poi
-    return amen_pois
+        print(f"\t{typ}: {len(amenity_pois_by_category[typ]['geojson'])}")
+
+    return amenity_pois_by_category
+
+
+def get_travel_times_to_closest_amenities(client, location, amenity_pois_by_category):
+    # Set up common request parameters
+    params_route = {'profile': 'foot-walking',
+                    'format_out': 'geojson',
+                    'geometry': 'true',
+                    'format': 'geojson',
+                    'instructions': 'false',
+                    }
+    # Store all routes to POIs
+    min_travel_times = []
+    for cat, pois in amenity_pois_by_category.items():
+        poi_durations = []
+        for poi in pois['geojson']:
+            poi_coords = poi['geometry']['coordinates']
+
+            # Perform actual request
+            params_route['coordinates'] = [[location['long'], location['lat']],
+                                           poi_coords
+                                           ]
+            json_route = client.directions(**params_route)
+            poi_duration = json_route['features'][0]['properties']['summary']['duration']
+            # Record durations of routes
+            poi_durations.append(poi_duration)
+        min_travel_times.append(round(min(poi_durations) / 60, 1))
+    return min_travel_times
+
+
+def get_number_of_amenities(amenity_pois_by_category):
+    amen_number_list = []
+    for key, value in amenity_pois_by_category.items():
+        amen_number_list.append(len(value["geojson"]))
+    return amen_number_list
+
+
+def get_amenities_number_and_travel_time(client, location, amenity_mapping):
+    amenity_dict = {}
+    amenity_keys = location["amenities"]
+
+    amenity_pois_by_category = get_amenity_pois_by_category(
+        client, location, amenity_mapping)
+    number_of_amenities = get_number_of_amenities(amenity_pois_by_category)
+
+    min_tt_to_amenity = get_travel_times_to_closest_amenities(
+        client, location, amenity_pois_by_category)
+
+    for key, number, min_tt_to_amenity in zip(amenity_keys, number_of_amenities, min_tt_to_amenity):
+        amenity_dict[key] = {
+            "number": number,
+            "min_tt_to_amenity": min_tt_to_amenity,
+        }
+
+    return amenity_dict

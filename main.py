@@ -1,6 +1,6 @@
 from calculations import calculate_di, calculate_divi, calculate_pi, calculate_fmi
 from ahp import get_weights
-from ors import get_auth_client, get_isochrone_data, get_amenity_pois
+from ors import get_auth_client, get_isochrone_data, get_amenities_number_and_travel_time
 
 import re
 
@@ -125,11 +125,11 @@ def fmi_method(inputs):
     land_use_ratios = ratios_mapping[place]
     divi = calculate_divi(land_use_ratios)
 
-    # get amenity POIs
-    location["amenity_pois"] = get_amenity_pois(
+    # get amenity data
+    location["amenity_data"] = get_amenities_number_and_travel_time(
         ors_client, location, amenity_mapping)
 
-    # calculate the weighted proximity index (PI)
+    # calculate the Proximity index (PI)
     pi = calculate_pi(location, weights, amenity_mapping)
 
     # calculate the 15 Minute City Index (FCI)

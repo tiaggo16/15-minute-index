@@ -5,7 +5,7 @@ inputs = {
     "place": "suburb",
     "long": "-122.471036",
     "lat": "37.769459",
-    "walking_time": "5",
+    "walking_time": "20",
     "amenity1": "hospital",
     "amenity2": "church",
     "amenity3": "supermarket",

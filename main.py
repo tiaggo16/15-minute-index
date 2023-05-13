@@ -113,7 +113,7 @@ def fmi_method(inputs):
     # get isochrone, its area and population
     location["iso"] = get_isochrone_data(
         ors_client, location)
-    # return location["iso"]["features"][0]
+    return location["iso"]["features"][0]
     iso_area = location["iso"]["features"][0]["properties"]["area"]
     iso_pop = location["iso"]["features"][0]["properties"]["total_pop"]
 

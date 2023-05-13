@@ -22,8 +22,8 @@ list_of_inputs = [{
     "pavc": "5",
     "pbvc-pref": "right",
     "pbvc": "3",
-},
-    {
+ },
+{
         "user": "adult",
         "place": "suburb",
         "long": "-122.462732",
@@ -45,7 +45,7 @@ list_of_inputs = [{
         "pbvc-pref": "right",
         "pbvc": "3",
 },
-    {
+{
         "user": "adult",
         "place": "uni",
         "long": "-122.457733",
@@ -198,7 +198,7 @@ list_of_inputs = [{
         "pavc": "6",
         "pbvc-pref": "left",
         "pbvc": "3",
-}
+},
 ]
 
 examples_results = []

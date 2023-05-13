@@ -1,5 +1,7 @@
+import itertools
 import openrouteservice
 import folium
+import time
 
 
 def get_auth_client():
@@ -106,7 +108,9 @@ def get_travel_times_to_closest_amenities(client, location, amenity_pois_by_cate
     min_travel_times = []
     for cat, pois in amenity_pois_by_category.items():
         poi_durations = []
-        for poi in pois['geojson']:
+        print("Sleeping 60s before asking ORS API for routes.")
+        time.sleep(60)
+        for poi in itertools.islice(pois['geojson'], 40):
             poi_coords = poi['geometry']['coordinates']
 
             # Perform actual request
@@ -117,7 +121,12 @@ def get_travel_times_to_closest_amenities(client, location, amenity_pois_by_cate
             poi_duration = json_route['features'][0]['properties']['summary']['duration']
             # Record durations of routes
             poi_durations.append(poi_duration)
-        min_travel_times.append(round(min(poi_durations) / 60, 1))
+        if poi_durations:
+            min_travel_times.append(round(min(poi_durations) / 60, 1))
+        else:
+            # if no amenity, uses 30 min, the maximum distance. Therefore, AI = 0.
+            min_travel_times.append(30.0)
+    print(min_travel_times)
     return min_travel_times
 
 
@@ -138,6 +147,7 @@ def get_amenities_number_and_travel_time(client, location, amenity_mapping):
 
     min_tt_to_amenity = get_travel_times_to_closest_amenities(
         client, location, amenity_pois_by_category)
+
 
     for key, number, min_tt_to_amenity in zip(amenity_keys, number_of_amenities, min_tt_to_amenity):
         amenity_dict[key] = {

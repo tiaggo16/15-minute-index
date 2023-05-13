@@ -56,7 +56,6 @@ def calculate_ai(location, i, amenity_mapping):
     ai_quant = clip((quant - qmin) / (qmax - qmin), 0, 1)
 
     ai = (ai_quant + ai_prox) / 2
-    print(ai, ai_prox, ai_quant)
     return clip(round(ai, 4), 0, 1)
 
 

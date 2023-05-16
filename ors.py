@@ -37,6 +37,7 @@ def get_isochrone_data(client, location):
         attributes=["area", "total_pop"],
     )
     create_map_with_iso_file(isochrone, lat, long)
+
     return isochrone
 
 
